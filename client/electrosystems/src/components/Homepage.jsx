@@ -105,7 +105,7 @@ useEffect(() => {
     <div className='hero h-screen w-full text-[130px] text-center'>
       
         <h1 className='bitcount mt-80 absolute z-20 text-center text-black herotext w-screen'>MAKING IT POSSIBLE</h1>
-        <h4 className='absolute w-[410px] z-10 bottom-0 opacity-0 text-[15px] text-left'>we invison to provide people with innovation that can make you go off grid , with cutting edge tecnology we are tranforming lives and Earth,Renewable energy is changing lives, giving people the freedom to choose better, greener, and more independent sources of power. From solar rooftops to wind micro-turbines, from off-grid cabins to eco-smart homes—renewable technologies are not just an alternative anymore; they are becoming the new standard.</h4>
+        <h4 className='absolute w-[410px] z-10 bottom-0 opacity- text-[15px] text-left'>we invison to provide people with innovation that can make you go off grid , with cutting edge tecnology we are tranforming lives and Earth,Renewable energy is changing lives, giving people the freedom to choose better, greener, and more independent sources of power. From solar rooftops to wind micro-turbines, from off-grid cabins to eco-smart homes—renewable technologies are not just an alternative anymore; they are becoming the new standard.</h4>
       
       
         <div  className={`ringbox z-1 fixed left-[35%] top-[140px]`}>
@@ -115,7 +115,7 @@ useEffect(() => {
         <div className={`ringg r4 border-90 border-blue-500/50 translate-y-[20px] `}></div>
         <div className={`ringg r5 border-30 border-white/60 translate-x-[20px]} `}></div>
         </div>
-        <div className='text-[40px] w-screen text-center opacity-0 h-fit '><span className='h2side bg-black w-[10px] mr-10'> </span> ELECTROSYTEMS</div>
+        <div className='text-[40px] w-screen text-center opacity-1 h-fit '><span className='h2side bg-black w-[10px] mr-10'> </span> ELECTROSYTEMS</div>
         
     </div>
 
