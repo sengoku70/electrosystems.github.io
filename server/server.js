@@ -1,10 +1,5 @@
 const express = require('express')
-<<<<<<< HEAD
-require('dotenv').config();
 
-=======
-const bcrypt  = require ('bcryptjs')
->>>>>>> b0ba646e15bf2b149caa6a28a26deb0c51673e69
 const cors = require("cors");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
