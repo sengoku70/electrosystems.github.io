@@ -155,3 +155,44 @@
   0%   { position: absolute ;transform: scale(2) ; }
   100% { position: absolute; transform: scale(2) ; }
 }
+
+/* ── Nav link slide animation ── */
+.nav-link {
+  position: relative;
+  display: inline-block;
+  padding: 4px 14px;
+  overflow: hidden;
+  color: black;
+  text-decoration: none;
+  z-index: 0;
+  transition: color 0.35s ease;
+}
+
+/* The sliding black fill */
+.nav-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: black;
+  transform: translateX(-101%);
+  transition: transform 0.35s cubic-bezier(0.76, 0, 0.24, 1);
+  z-index: -1;
+}
+
+/* When active: slide the fill all the way in */
+.nav-link.active::before {
+  transform: translateX(0);
+}
+
+/* When active: text turns white */
+.nav-link.active {
+  color: white;
+}
+
+/* Hover: subtle slide-in preview */
+.nav-link:hover::before {
+  transform: translateX(0);
+}
+.nav-link:hover {
+  color: white;
+}

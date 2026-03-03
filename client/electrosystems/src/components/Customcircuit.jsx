@@ -16,7 +16,7 @@ export default function CustomSystemsPage() {
   // Sample product catalogs (you can extend or fetch from backend)
   const API_URL = "http://localhost:5000";
   const location = useLocation();
-  
+
   const solarCatalog = [
     { id: "sp1", brand: "SunPower", model: "SunPower 410W", watt: 410, price: 230 },
     { id: "sp2", brand: "LG", model: "LG 370W", watt: 370, price: 190 },
@@ -99,21 +99,26 @@ export default function CustomSystemsPage() {
   const [notes, setNotes] = useState(templates["suburb-house"].note);
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState(null);
-  
+
+  // Location state
+  const [locationStatus, setLocationStatus] = useState("idle"); // idle | loading | success | error
+  const [locationData, setLocationData] = useState(null);
+  const [locationError, setLocationError] = useState("");
+
   // Load system from community if passed via navigation state
   useEffect(() => {
     if (location.state?.loadedSystem) {
       const system = location.state.loadedSystem;
-      
+
       // Find the matching solar product ID
-      const solarId = solarCatalog.find(p => 
-        p.brand === system.selectedSolar.brand && 
+      const solarId = solarCatalog.find(p =>
+        p.brand === system.selectedSolar.brand &&
         p.model === system.selectedSolar.model
       )?.id || solarCatalog[0].id;
-      
+
       // Find the matching wind product ID
-      const windId = windCatalog.find(p => 
-        p.brand === system.selectedWind.brand && 
+      const windId = windCatalog.find(p =>
+        p.brand === system.selectedWind.brand &&
         p.model === system.selectedWind.model
       )?.id || windCatalog[0].id;
 
@@ -125,7 +130,7 @@ export default function CustomSystemsPage() {
       setWindCapacityFactor(system.windCapacityFactor);
       setSelectedTemplate(system.template);
       setNotes(system.notes);
-      
+
       // Calculate mixed solar share from the counts
       if (system.plan === "mixed" && system.counts) {
         const totalCount = system.counts.solarCount + system.counts.windCount;
@@ -135,6 +140,61 @@ export default function CustomSystemsPage() {
       }
     }
   }, [location.state]);
+
+  // ── Location detection ──
+  async function detectLocation() {
+    setLocationStatus("loading");
+    setLocationError("");
+    setLocationData(null);
+
+    if (!navigator.geolocation) {
+      setLocationStatus("error");
+      setLocationError("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude: lat, longitude: lon } = pos.coords;
+        try {
+          // Open-Meteo: free climate API — no key needed
+          const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+            `&daily=sunshine_duration,windspeed_10m_max&forecast_days=14&timezone=auto`;
+          const res = await fetch(url);
+          if (!res.ok) throw new Error("Weather API failed");
+          const data = await res.json();
+
+          // sunshine_duration is in seconds/day — convert to hours
+          const sunsArr = data.daily.sunshine_duration;
+          const avgSunSec = sunsArr.reduce((a, b) => a + b, 0) / sunsArr.length;
+          const sunHours = Math.round((avgSunSec / 3600) * 10) / 10;
+
+          // windspeed_10m_max in km/h — convert to capacity factor
+          // Rule of thumb: typical small turbine cuts in ~12 km/h, rated at ~50 km/h
+          // capacity factor ≈ clamp((avgWind - 12) / (50 - 12), 0.05, 0.55)
+          const windArr = data.daily.windspeed_10m_max;
+          const avgWind = windArr.reduce((a, b) => a + b, 0) / windArr.length;
+          const cf = Math.min(0.55, Math.max(0.05, (avgWind - 12) / 38));
+          const capFactor = Math.round(cf * 100) / 100;
+
+          // Reverse-geocode for city name (Open-Meteo timezone string)
+          const city = data.timezone?.replace(/_/g, " ").split("/").pop() || "Your Location";
+
+          setLocationData({ lat: lat.toFixed(4), lon: lon.toFixed(4), city, sunHours, avgWind: Math.round(avgWind * 10) / 10, capFactor });
+          setAvgSunHours(sunHours);
+          setWindCapacityFactor(capFactor);
+          setLocationStatus("success");
+        } catch (err) {
+          setLocationStatus("error");
+          setLocationError("Could not fetch climate data. Check your connection.");
+        }
+      },
+      (err) => {
+        setLocationStatus("error");
+        setLocationError(err.message || "Location access denied.");
+      }
+    );
+  }
 
   // helpers to lookup products
   const solarProduct = useMemo(() => solarCatalog.find((p) => p.id === selectedSolar), [selectedSolar]);
@@ -208,12 +268,13 @@ export default function CustomSystemsPage() {
     try {
       // Send to backend - adapt endpoint as needed
       const token = localStorage.getItem("token");
-      console.log("token:",token);
+      console.log("token:", token);
       const res = await fetch(`${API_URL}/payload/saveCustomSystem`, {
         method: "POST",
-        headers: { "Content-Type": "application/json",
+        headers: {
+          "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
-         },
+        },
         body: JSON.stringify(payload),
       });
 
@@ -251,100 +312,163 @@ export default function CustomSystemsPage() {
 
   return (
     <div className="bg-blue-100 pb-50 hero bg-fixed thicc">
-    <div className="p-6 max-w-8/10 mx-auto translate-y-30">
-      <h1 className="text-3xl font-bold text-white bg-black w-fit p-2 mb-4">Custom Systems</h1>
-      <p className="mb-6 text-md text-muted-foreground">Build a hybrid solar + wind recommendation to reduce dependency on the grid. Fill inputs, pick brands, and submit to save.</p>
+      <div className="p-6 max-w-8/10 mx-auto translate-y-30">
+        <h1 className="text-3xl font-bold text-white bg-black w-fit p-2 mb-4">Custom Systems</h1>
+        <p className="mb-6 text-md text-muted-foreground">Build a hybrid solar + wind recommendation to reduce dependency on the grid. Fill inputs, pick brands, and submit to save.</p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 bg-white/60 shadow-2xl gap-6">
-        <div className="p-4  rounded-lg">
-          <h2 className="font-semibold mb-2">Usage & Targets</h2>
+        {/* ── Location Detection Panel ── */}
+        <div className="bg-white border-l-[10px] border-black border-y border-r border-slate-200 p-0 mb-6 flex flex-wrap items-stretch gap-0 overflow-hidden">
+          {/* Left: Action */}
+          <div className="flex-[1_1_240px] p-6 lg:p-7 border-r border-slate-100">
+            <div className="font-extrabold text-base mb-1.5 flex items-center gap-2">📍 Auto-Detect Location</div>
+            <div className="text-[13px] text-slate-500 mb-3 line-height-relaxed">
+              Grant location access and we'll fetch real solar &amp; wind data for your area using live climate data.
+            </div>
+            <button
+              onClick={detectLocation}
+              disabled={locationStatus === "loading"}
+              className={`
+                px-6 py-2.5 font-extrabold text-sm tracking-wide flex items-center gap-2 transition-all
+                ${locationStatus === "loading" ? "bg-slate-400 cursor-not-allowed" : "bg-black hover:bg-slate-800"}
+                text-white border-0
+              `}
+            >
+              {locationStatus === "loading" ? (
+                <><span className="inline-block w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" /> Detecting...</>
+              ) : "🛰️ Detect My Location"}
+            </button>
+            {locationError && <div className="text-red-600 text-[13px] mt-2 font-medium">⚠️ {locationError}</div>}
 
-          <label className="block text-sm mb-1">Preloaded Templates</label>
-          <div className="flex flex-wrap gap-2 mb-3">
-            {Object.entries(templates).map(([k, v]) => (
-              <button
-                key={k}
-                onClick={() => applyTemplate(k)}
-                className={`px-3 py-1 border-b-4 border-black ${selectedTemplate === k ? "bg-black text-white" : "bg-white"}`}>
-                {v.label}
-              </button>
-            ))}
+            {locationStatus === "success" && (
+              <div className="bg-emerald-50 border border-emerald-200 px-3.5 py-2.5 text-[13px] text-emerald-700 font-bold mt-4">
+                ✅ Values auto-applied!
+              </div>
+            )}
           </div>
 
-          <label className="block text-sm">Monthly usage (kWh)</label>
-          <input type="number" value={monthlyUsage} onChange={(e) => setMonthlyUsage(Number(e.target.value))} className="w-1/3 p-2 border rounded mb-3" />
+          {locationStatus === "success" && locationData && (
+            <>
+              {/* Middle: Stats */}
+              <div className="flex-[1_1_280px] grid grid-cols-2 gap-2.5 p-6 border-r border-slate-100">
+                {[
+                  { icon: "🌍", label: "Location", value: locationData.city },
+                  { icon: "☀️", label: "Sun Hrs", value: `${locationData.sunHours}` },
+                  { icon: "💨", label: "Wind CF", value: locationData.capFactor },
+                  { icon: "📐", label: "Lat/Lon", value: `${locationData.lat}, ${locationData.lon}` },
+                ].map((s, i) => (
+                  <div key={i} className="bg-slate-50 border border-slate-200 p-2.5">
+                    <div className="text-sm mb-1 flex items-center gap-1.5">
+                      <span>{s.icon}</span>
+                      <span className="text-[10px] text-slate-400 uppercase tracking-widest font-bold">{s.label}</span>
+                    </div>
+                    <div className="text-sm font-extrabold text-slate-900">{s.value}</div>
+                  </div>
+                ))}
+              </div>
 
-          <label className="block text-sm">Desired grid reduction (%)</label>
-          <input type="range" min={0} max={100} value={desiredReduction} onChange={(e) => setDesiredReduction(Number(e.target.value))} />
-          <div className="text-sm mb-3">{desiredReduction}% of {monthlyUsage} kWh ⇒ <strong>{Math.round(desiredKWh)} kWh</strong> target</div>
-
-          <label className="block text-sm">Average sun hours / day</label>
-          <input type="number" step="0.1" value={avgSunHours} onChange={(e) => setAvgSunHours(Number(e.target.value))} className="w-1/3 p-2 border rounded mb-3" />
-
-          <label className="block text-sm">Wind capacity factor (0-1)</label>
-          <input type="number" step="0.01" min={0} max={1} value={windCapacityFactor} onChange={(e) => setWindCapacityFactor(Number(e.target.value))} className="w-full p-2 border rounded mb-3" />
-
-          <label className="block text-sm">Notes</label>
-          <textarea value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full p-2 border rounded" />
+              {/* Right: Map (Full Bleed Content with Satellite View) */}
+              <div className="flex-[1.5_1_320px] min-h-[200px] relative overflow-hidden">
+                <iframe
+                  title="Satellite View"
+                  className="w-full h-full border-0 grayscale-[0.2] contrast-[1.1]"
+                  src={`https://maps.google.com/maps?q=${locationData.lat},${locationData.lon}&t=k&z=17&output=embed`}
+                />
+              </div>
+            </>
+          )}
         </div>
-        
-        <div className="p-4 border-l-[10px] ">
-          <h2 className="font-semibold mb-2">Select Equipment</h2>
+        <style>{`@keyframes locSpin { to { transform: rotate(360deg); } }`}</style>
 
-          {/* Top: primary selects */}
-          <div className="bg-white/40 p-3 rounded-lg shadow-sm mb-3">
-            <label className="block text-sm">Solar panel brand & model</label>
-            <select value={selectedSolar} onChange={(e) => setSelectedSolar(e.target.value)} className="w-full p-2 border rounded mb-3">
-              {solarCatalog.map((p) => (
-                <option key={p.id} value={p.id}>{p.brand} — {p.model} — {p.watt}W — ₹{p.price}</option>
+        <div className="grid grid-cols-1 md:grid-cols-2 bg-white/60 shadow-2xl gap-6">
+          <div className="p-4  rounded-lg">
+            <h2 className="font-semibold mb-2">Usage & Targets</h2>
+
+            <label className="block text-sm mb-1">Preloaded Templates</label>
+            <div className="flex flex-wrap gap-2 mb-3">
+              {Object.entries(templates).map(([k, v]) => (
+                <button
+                  key={k}
+                  onClick={() => applyTemplate(k)}
+                  className={`px-3 py-1 border-b-4 border-black ${selectedTemplate === k ? "bg-black text-white" : "bg-white"}`}>
+                  {v.label}
+                </button>
               ))}
-            </select>
+            </div>
 
-            <label className="block text-sm">Wind turbine brand & model</label>
-            <select value={selectedWind} onChange={(e) => setSelectedWind(e.target.value)} className="w-full p-2 border rounded">
-              {windCatalog.map((p) => (
-                <option key={p.id} value={p.id}>{p.brand} — {p.model} — {p.kw} kW — ₹{p.price}</option>
-              ))}
-            </select>
+            <label className="block text-sm">Monthly usage (kWh)</label>
+            <input type="number" value={monthlyUsage} onChange={(e) => setMonthlyUsage(Number(e.target.value))} className="w-1/3 p-2 border rounded mb-3" />
+
+            <label className="block text-sm">Desired grid reduction (%)</label>
+            <input type="range" min={0} max={100} value={desiredReduction} onChange={(e) => setDesiredReduction(Number(e.target.value))} />
+            <div className="text-sm mb-3">{desiredReduction}% of {monthlyUsage} kWh ⇒ <strong>{Math.round(desiredKWh)} kWh</strong> target</div>
+
+            <label className="block text-sm">Average sun hours / day</label>
+            <input type="number" step="0.1" value={avgSunHours} onChange={(e) => setAvgSunHours(Number(e.target.value))} className="w-1/3 p-2 border rounded mb-3" />
+
+            <label className="block text-sm">Wind capacity factor (0-1)</label>
+            <input type="number" step="0.01" min={0} max={1} value={windCapacityFactor} onChange={(e) => setWindCapacityFactor(Number(e.target.value))} className="w-full p-2 border rounded mb-3" />
+
+            <label className="block text-sm">Notes</label>
+            <textarea value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full p-2 border rounded" />
           </div>
 
-          {/* Bottom: settings */}
-          <div className="bg-white/40 p-3 rounded-lg shadow-sm">
-            <label className="block text-sm">Installation markup (%)</label>
-            <input type="number" value={installationMarkupPercent} onChange={(e) => setInstallationMarkupPercent(Number(e.target.value))} className="w-full p-2 border rounded mb-3" />
+          <div className="p-4 border-l-[10px] ">
+            <h2 className="font-semibold mb-2">Select Equipment</h2>
 
-            <label className="block text-sm">Mixed plan solar share (%)</label>
-            <input type="range" min={0} max={100} value={mixedSolarShare} onChange={(e) => setMixedSolarShare(Number(e.target.value))} className="w-full" />
-            <div className="text-sm mt-2">Solar share in mixed plan: <strong>{mixedSolarShare}%</strong></div>
-          </div>
+            {/* Top: primary selects */}
+            <div className="bg-white/40 p-3 rounded-lg shadow-sm mb-3">
+              <label className="block text-sm">Solar panel brand & model</label>
+              <select value={selectedSolar} onChange={(e) => setSelectedSolar(e.target.value)} className="w-full p-2 border rounded mb-3">
+                {solarCatalog.map((p) => (
+                  <option key={p.id} value={p.id}>{p.brand} — {p.model} — {p.watt}W — ₹{p.price}</option>
+                ))}
+              </select>
 
-          {/* Animated bar chart summary for the mixed plan */}
-          <div className="mt-4 p-3 bg-white/40 rounded-lg shadow-sm">
-            <h4 className="font-medium mb-2">Estimated monthly production (mixed)</h4>
-            <AnimatedBarChart
-              solarKWh={Math.round(mixed.solarCount * solarPanelMonthly)}
-              windKWh={Math.round(mixed.windCount * turbineMonthly)}
-              desiredKWh={Math.round(desiredKWh)}
-            />
+              <label className="block text-sm">Wind turbine brand & model</label>
+              <select value={selectedWind} onChange={(e) => setSelectedWind(e.target.value)} className="w-full p-2 border rounded">
+                {windCatalog.map((p) => (
+                  <option key={p.id} value={p.id}>{p.brand} — {p.model} — {p.kw} kW — ₹{p.price}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Bottom: settings */}
+            <div className="bg-white/40 p-3 rounded-lg shadow-sm">
+              <label className="block text-sm">Installation markup (%)</label>
+              <input type="number" value={installationMarkupPercent} onChange={(e) => setInstallationMarkupPercent(Number(e.target.value))} className="w-full p-2 border rounded mb-3" />
+
+              <label className="block text-sm">Mixed plan solar share (%)</label>
+              <input type="range" min={0} max={100} value={mixedSolarShare} onChange={(e) => setMixedSolarShare(Number(e.target.value))} className="w-full" />
+              <div className="text-sm mt-2">Solar share in mixed plan: <strong>{mixedSolarShare}%</strong></div>
+            </div>
+
+            {/* Animated bar chart summary for the mixed plan */}
+            <div className="mt-4 p-3 bg-white/40 rounded-lg shadow-sm">
+              <h4 className="font-medium mb-2">Estimated monthly production (mixed)</h4>
+              <AnimatedBarChart
+                solarKWh={Math.round(mixed.solarCount * solarPanelMonthly)}
+                windKWh={Math.round(mixed.windCount * turbineMonthly)}
+                desiredKWh={Math.round(desiredKWh)}
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <PlanCard title="Solar only" counts={solarOnly} costs={solarOnlyCosts} onSubmit={() => handleSubmit("solarOnly")} submitting={submitting} />
-        <PlanCard title="Wind only" counts={windOnly} costs={windOnlyCosts} onSubmit={() => handleSubmit("windOnly")} submitting={submitting} />
-        <PlanCard title={`Mixed (${mixedSolarShare}% solar)`} counts={mixed} costs={mixedCosts} onSubmit={() => handleSubmit("mixed")} submitting={submitting} />
-      </div>
-
-      {message && (
-        <div className={`mt-4 p-3 rounded ${message.type === "success" ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200"}`}>
-          {message.text}
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <PlanCard title="Solar only" counts={solarOnly} costs={solarOnlyCosts} onSubmit={() => handleSubmit("solarOnly")} submitting={submitting} />
+          <PlanCard title="Wind only" counts={windOnly} costs={windOnlyCosts} onSubmit={() => handleSubmit("windOnly")} submitting={submitting} />
+          <PlanCard title={`Mixed (${mixedSolarShare}% solar)`} counts={mixed} costs={mixedCosts} onSubmit={() => handleSubmit("mixed")} submitting={submitting} />
         </div>
-      )}
 
-      <div className="mt-8 text-xs text-muted-foreground">Notes: Estimates use simplified assumptions (panel wattage × avg sun hours, turbine rated power × capacity factor). Adjust inputs for your local climate and consult a certified installer for precise design and permitting.</div>
-    </div>
-    <Mysystem/>
+        {message && (
+          <div className={`mt-4 p-3 rounded ${message.type === "success" ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200"}`}>
+            {message.text}
+          </div>
+        )}
+
+        <div className="mt-8 text-xs text-muted-foreground">Notes: Estimates use simplified assumptions (panel wattage × avg sun hours, turbine rated power × capacity factor). Adjust inputs for your local climate and consult a certified installer for precise design and permitting.</div>
+      </div>
+      <Mysystem />
     </div>
   );
 }
@@ -366,7 +490,7 @@ function PlanCard({ title, counts, costs, onSubmit, submitting }) {
         {submitting ? "Saving..." : "Choose this plan & Save"}
       </button>
 
-      
+
     </div>
   );
 }
