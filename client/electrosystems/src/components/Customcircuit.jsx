@@ -317,7 +317,7 @@ export default function CustomSystemsPage() {
         <p className="mb-6 text-md text-muted-foreground">Build a hybrid solar + wind recommendation to reduce dependency on the grid. Fill inputs, pick brands, and submit to save.</p>
 
         {/* ── Location Detection Panel ── */}
-        <div className="bg-white border-l-[10px] border-black border-y border-r border-slate-200 p-0 mb-6 flex flex-wrap items-stretch gap-0 overflow-hidden">
+        <div className="bg-white border-l-[10px] border-black  p-0 mb-6 flex flex-wrap items-stretch gap-0 overflow-hidden">
           {/* Left: Action */}
           <div className="flex-[1_1_240px] p-6 lg:p-7 border-r border-slate-100">
             <div className="font-extrabold text-base mb-1.5 flex items-center gap-2">📍 Auto-Detect Location</div>
