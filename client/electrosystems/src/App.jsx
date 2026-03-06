@@ -71,7 +71,7 @@ function App() {
               {profile.username}
             </div>
           )}
-          <img src='src/assets/image/Untitled.png' className={`h-[100px] ${token ? "ml-4" : "ml-auto"}  w-fit`} />
+          <img src='/image/Untitled.png' className={`h-[100px] ${token ? "ml-4" : "ml-auto"}  w-fit`} />
 
         </nav>
 

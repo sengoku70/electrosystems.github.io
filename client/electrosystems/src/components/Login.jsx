@@ -87,7 +87,7 @@ const Login = ({ token, setToken, setProfile, profile }) => {
         {/* content over image */}
         <div className="login-visual-content">
           <div className="login-logo-row">
-            <img src="src/assets/image/Untitled.png" alt="Logo" className="login-logo" />
+            <img src="/image/Untitled.png" alt="Logo" className="login-logo" />
             <span className="login-brand">ELECTROSYSTEMS</span>
           </div>
 

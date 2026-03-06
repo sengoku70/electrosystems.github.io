@@ -183,7 +183,7 @@ export default function RenewableInfoPage() {
           </div>
           <div className="info-nature-img-wrap">
             <img
-              src="src/assets/image/Gemini_Generated_Image_39qvjf39qvjf39qv.png"
+              src="/image/Gemini_Generated_Image_39qvjf39qvjf39qv.png"
               className="info-nature-img"
               alt="Nature and energy"
             />
@@ -254,7 +254,7 @@ export default function RenewableInfoPage() {
             </NavLink>
           </div>
           <img
-            src="src/assets/image/untitled33-removebg-preview.png"
+            src="/image/untitled33-removebg-preview.png"
             alt="Off-grid house"
             className="info-offgrid-img"
           />
