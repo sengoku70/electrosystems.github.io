@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import '../App.css';
 import gsap from 'gsap';
-import logo from "../assets/image/untitled.png"
+import logo from "../assets/image/Untitled.png"
 import Community from './Community';
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { BsInstagram } from "react-icons/bs";
