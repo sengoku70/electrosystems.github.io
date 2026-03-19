@@ -241,19 +241,37 @@ const Login = ({ token, setToken, setProfile, profile }) => {
         /* ── Root ── */
         .login-root {
           display: flex;
-          height: 100vh;
+          flex-direction: column;
+          min-height: 100vh;
           width: 100vw;
-          overflow: hidden;
+          overflow-x: hidden;
           font-family: 'Science Gothic', sans-serif;
-          padding-top: 0;
+          padding-top: 100px;
+        }
+
+        @media (min-width: 1024px) {
+          .login-root {
+            flex-direction: row;
+            height: 100vh;
+            padding-top: 0;
+            overflow: hidden;
+          }
         }
 
         /* ── Left visual panel ── */
         .login-visual {
           position: relative;
-          flex: 1.1;
+          width: 100%;
+          height: 400px;
           overflow: hidden;
         }
+        @media (min-width: 1024px) {
+          .login-visual {
+            flex: 1.1;
+            height: 100%;
+          }
+        }
+
         .login-bg-slide {
           position: absolute;
           inset: 0;

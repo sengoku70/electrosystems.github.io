@@ -69,8 +69,8 @@ export default function Community() {
 
   return (
     <div className="community-page  bg-blue-100 pb-50 bg-fixed hero min-h-screen">
-      <div className="p-6 max-w-8/10 mx-auto translate-y-30">
-        <h1 className="text-3xl font-bold text-white bg-black w-fit p-2 mb-4">Community Systems</h1>
+      <div className="p-4 md:p-6 w-full max-w-[1200px] mx-auto pt-24 md:pt-32">
+        <h1 className="text-2xl md:text-3xl font-bold text-white bg-black w-fit p-2 mb-4">Community Systems</h1>
         <p className="text-sm text-muted-foreground mb-8">Explore renewable energy solutions from our community and modify them for your needs.</p>
 
         {error && <div className="error-message">{error}</div>}
@@ -113,10 +113,9 @@ export default function Community() {
                 )}
 
                 {/* Card Content */}
-                <div className="card-content flex justify-evenly">
+                <div className="card-content flex flex-col md:flex-row gap-6 p-4 md:p-6">
                   
-
-                  <div className="system-stats w-1/3 grid grid-cols-2">
+                  <div className="system-stats w-full md:w-1/3 grid grid-cols-2 gap-4">
                     <div className="stat-item">
                       <span className="stat-label">Monthly Usage</span>
                       <span className="stat-value">{system.monthlyUsage} kWh</span>
@@ -138,7 +137,7 @@ export default function Community() {
                   </div>
 
                   {/* Equipment Details */}
-                  <div className="equipment-section">
+                  <div className="equipment-section w-full md:w-1/3">
                     <h4>Equipment</h4>
                     <div className="equipment-grid">
                       {system.selectedSolar && (
@@ -174,7 +173,7 @@ export default function Community() {
 
                   {/* Notes */}
                   {system.notes && (
-                    <div className="notes-section">
+                    <div className="notes-section w-full md:w-1/3 italic text-gray-600 border-l-2 border-black pl-4">
                       <p className="notes-text">"{system.notes}"</p>
                     </div>
                   )}
@@ -202,8 +201,8 @@ export default function Community() {
 
         {/* Modal for detailed view */}
         {selectedSystem && (
-          <div className="modal-overlay " onClick={() => setSelectedSystem(null)}>
-            <div className="modal-content w-7/10 mt-40 " onClick={(e) => e.stopPropagation()}>
+          <div className="modal-overlay z-50 fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setSelectedSystem(null)}>
+            <div className="modal-content w-full max-w-[800px] max-h-[90vh] overflow-y-auto bg-white p-6 md:p-10 relative" onClick={(e) => e.stopPropagation()}>
               <button
                 className="modal-close"
                 onClick={() => setSelectedSystem(null)}
