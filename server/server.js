@@ -20,6 +20,7 @@ app.use(express.json());
 // Routes
 app.use("/auth", authRoutes);
 app.use("/payload", payloadRoutes);
+app.use("/installation", require("./routes/installationRoutes"));
 
 // router.post("/custom-systems", auth, async (req, res) => {
 //   try {

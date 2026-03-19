@@ -312,9 +312,9 @@ export default function CustomSystemsPage() {
 
   return (
     <div className="bg-blue-100 pb-50 hero bg-fixed thicc">
-      <div className="p-4 md:p-6 w-full max-w-[1200px] mx-auto pt-24 md:pt-32">
-        <h1 className="text-2xl md:text-3xl font-bold text-white bg-black w-fit p-2 mb-4">Custom Systems</h1>
-        <p className="mb-6 text-sm text-muted-foreground">Build a hybrid solar + wind recommendation to reduce dependency on the grid. Fill inputs, pick brands, and submit to save.</p>
+      <div className="p-6 max-w-8/10 mx-auto translate-y-30">
+        <h1 className="text-3xl font-bold text-white bg-black w-fit p-2 mb-4">Custom Systems</h1>
+        <p className="mb-6 text-md text-muted-foreground">Build a hybrid solar + wind recommendation to reduce dependency on the grid. Fill inputs, pick brands, and submit to save.</p>
 
         {/* ── Location Detection Panel ── */}
         <div className="bg-white border-l-[10px] border-black  p-0 mb-6 flex flex-wrap items-stretch gap-0 overflow-hidden">
@@ -396,14 +396,14 @@ export default function CustomSystemsPage() {
             </div>
 
             <label className="block text-sm">Monthly usage (kWh)</label>
-            <input type="number" value={monthlyUsage} onChange={(e) => setMonthlyUsage(Number(e.target.value))} className="w-full md:w-1/3 p-2 border rounded-none mb-3" />
+            <input type="number" value={monthlyUsage} onChange={(e) => setMonthlyUsage(Number(e.target.value))} className="w-1/3 p-2 border rounded mb-3" />
 
             <label className="block text-sm">Desired grid reduction (%)</label>
-            <input type="range" min={0} max={100} value={desiredReduction} onChange={(e) => setDesiredReduction(Number(e.target.value))} className="w-full" />
+            <input type="range" min={0} max={100} value={desiredReduction} onChange={(e) => setDesiredReduction(Number(e.target.value))} />
             <div className="text-sm mb-3">{desiredReduction}% of {monthlyUsage} kWh ⇒ <strong>{Math.round(desiredKWh)} kWh</strong> target</div>
 
             <label className="block text-sm">Average sun hours / day</label>
-            <input type="number" step="0.1" value={avgSunHours} onChange={(e) => setAvgSunHours(Number(e.target.value))} className="w-full md:w-1/3 p-2 border rounded-none mb-3" />
+            <input type="number" step="0.1" value={avgSunHours} onChange={(e) => setAvgSunHours(Number(e.target.value))} className="w-1/3 p-2 border rounded mb-3" />
 
             <label className="block text-sm">Wind capacity factor (0-1)</label>
             <input type="number" step="0.01" min={0} max={1} value={windCapacityFactor} onChange={(e) => setWindCapacityFactor(Number(e.target.value))} className="w-full p-2 border rounded mb-3" />

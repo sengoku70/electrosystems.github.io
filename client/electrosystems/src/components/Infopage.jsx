@@ -74,7 +74,7 @@ export default function RenewableInfoPage() {
         <div className="infopage-hero-glow glow2" />
       </div>
 
-      <div className="infopage w-full px-4 md:w-11/12 lg:w-8/10 mx-auto pt-40 pb-20">
+      <div className="infopage w-8/10 mx-auto pt-40 pb-20">
 
         {/* ── Section Header ── */}
         <div className="info-section-header">
@@ -301,7 +301,6 @@ export default function RenewableInfoPage() {
           min-height: 100vh;
           position: relative;
           overflow-x: hidden;
-          padding-top: 80px;
         }
         .infopage-hero-bg {
           position: fixed;
@@ -452,12 +451,7 @@ export default function RenewableInfoPage() {
           display: flex;
           gap: 32px;
           align-items: flex-start;
-          flex-direction: column;
-        }
-        @media (min-width: 1024px) {
-          .info-card-body {
-            flex-direction: row;
-          }
+          flex-wrap: wrap;
         }
         .info-card-text {
           flex: 1;
@@ -520,18 +514,12 @@ export default function RenewableInfoPage() {
           border: 2px solid #bbf7d0;
           border-left: 10px solid black;
           border-radius: 0;
-          padding: 30px;
+          padding: 48px;
           margin-bottom: 40px;
           display: flex;
           gap: 40px;
           align-items: center;
-          flex-direction: column;
-        }
-        @media (min-width: 1024px) {
-          .info-nature-section {
-            flex-direction: row;
-            padding: 48px;
-          }
+          flex-wrap: wrap;
         }
         .info-nature-text {
           flex: 1;
@@ -545,14 +533,7 @@ export default function RenewableInfoPage() {
           font-weight: 800;
         }
         .info-nature-img-wrap {
-          flex: 0 0 auto;
-          width: 100%;
-          max-width: 400px;
-        }
-        @media (min-width: 1024px) {
-          .info-nature-img-wrap {
-            flex: 0 0 300px;
-          }
+          flex: 0 0 300px;
         }
         .info-nature-img {
           width: 100%;
@@ -694,20 +675,14 @@ export default function RenewableInfoPage() {
           border: 2px solid #1e293b;
           border-left: 10px solid black;
           border-radius: 0;
-          padding: 40px 30px;
+          padding: 60px 48px;
           display: flex;
           gap: 40px;
           align-items: center;
-          flex-direction: column;
+          flex-wrap: wrap;
           margin-bottom: 40px;
           overflow: hidden;
           position: relative;
-        }
-        @media (min-width: 1024px) {
-          .info-offgrid-section {
-            flex-direction: row;
-            padding: 60px 48px;
-          }
         }
         .info-offgrid-section::before {
           content: '';
@@ -758,19 +733,13 @@ export default function RenewableInfoPage() {
           box-shadow: 0 8px 30px rgba(0,0,0,0.4);
         }
         .info-offgrid-img {
-          flex: 0 0 auto;
-          max-width: 100%;
-          width: 100%;
+          flex: 0 0 460px;
+          max-width: 460px;
+          width: 460px;
           filter: drop-shadow(0 24px 48px rgba(59,130,246,0.35));
           position: relative;
           z-index: 1;
           transition: transform 0.4s ease;
-        }
-        @media (min-width: 1024px) {
-          .info-offgrid-img {
-            flex: 0 0 460px;
-            width: 460px;
-          }
         }
         .info-offgrid-img:hover {
           transform: scale(1.04) translateY(-6px);

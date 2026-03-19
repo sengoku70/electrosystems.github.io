@@ -93,4 +93,22 @@ exports.getCustomSystemById = async (req, res) => {
   }
 };
 
+// Get systems for current logged in user
+exports.getMine = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const systems = await CustomSystem.find({ userId })
+      .sort({ createdAt: -1 });
+
+    res.json({
+      message: "Retrieved your custom systems",
+      systems
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch your systems" });
+  }
+};
+
 
