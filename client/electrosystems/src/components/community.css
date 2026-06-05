@@ -40,7 +40,7 @@
 
 .no-systems {
   background: white;
-  border-radius: 15px;
+  border-radius: 0;
   padding: 60px 20px;
   text-align: center;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
@@ -54,7 +54,7 @@
 /* System Card */
 .system-card {
   background: white;
-  border-radius: 15px;
+  border-radius: 0;
   overflow: hidden;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
@@ -82,7 +82,7 @@
 .user-avatar {
   width: 50px;
   height: 50px;
-  border-radius: 50%;
+  border-radius: 0;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   display: flex;
@@ -137,7 +137,7 @@
 .plan-badge {
   display: inline-block;
   padding: 8px 16px;
-  border-radius: 25px;
+  border-radius: 0;
   font-weight: 600;
   font-size: 0.9rem;
   letter-spacing: 0.5px;
@@ -165,7 +165,7 @@
   margin-bottom: 30px;
   padding: 20px;
   background: #f8f9fa;
-  border-radius: 10px;
+  border-radius: 0;
   border-left: 4px solid #667eea;
 }
 
@@ -219,7 +219,7 @@
   gap: 15px;
   padding: 15px;
   background: #f8f9fa;
-  border-radius: 10px;
+  border-radius: 0;
   border: 1px solid #e0e0e0;
   transition: all 0.3s ease;
 }
@@ -255,7 +255,7 @@
   padding: 15px;
   background: #f0f4ff;
   border-left: 4px solid #667eea;
-  border-radius: 5px;
+  border-radius: 0;
   margin: 20px 0;
 }
 
@@ -282,7 +282,7 @@
   padding: 12px 20px;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 0;
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
@@ -332,7 +332,7 @@
   padding: 20px;
   background: #ff6b6b;
   color: white;
-  border-radius: 10px;
+  border-radius: 0;
   text-align: center;
   font-weight: 600;
 }
@@ -355,7 +355,7 @@
 
 .modal-content {
   background: white;
-  border-radius: 15px;
+  border-radius: 0;
   padding: 40px;
   max-width: 600px;
   max-height: 90vh;
@@ -369,22 +369,25 @@
   position: absolute;
   top: 20px;
   right: 20px;
-  background: #f0f0f0;
+  background: black;
+  color: white;
   border: none;
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: 0;
   font-size: 1.5rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  z-index: 1100;
 }
 
 .modal-close:hover {
-  background: #667eea;
+  background: #333;
   color: white;
+  transform: rotate(90deg);
 }
 
 .modal-content h2 {
@@ -396,7 +399,7 @@
 
 .modal-image {
   width: 100%;
-  border-radius: 10px;
+  border-radius: 0;
   margin-bottom: 30px;
   max-height: 300px;
   object-fit: cover;
@@ -413,7 +416,7 @@
   justify-content: space-between;
   padding: 15px;
   background: #f8f9fa;
-  border-radius: 8px;
+  border-radius: 0;
   border-left: 3px solid #667eea;
 }
 
@@ -448,7 +451,7 @@
   background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 0;
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
@@ -578,7 +581,7 @@
 }
 
 .compact .system-card {
-  border-radius: 10px;
+  border-radius: 0;
   box-shadow: 0 6px 18px rgba(0,0,0,0.12);
 }
 

@@ -78,14 +78,16 @@ export default function PlanInstallation() {
   }, [token, navigate]);
 
   useEffect(() => {
-    gsap.from(".plan-card", {
-      y: 50,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: "power3.out"
-    });
-  }, []);
+    if (userSystems.length > 0) {
+      gsap.from(".plan-card", {
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: "power3.out"
+      });
+    }
+  }, [userSystems]);
 
   async function fetchUserSystems() {
     setLoading(true);
@@ -172,8 +174,8 @@ export default function PlanInstallation() {
     <div className="min-h-screen lg:h-screen bg-pink-100 pt-32 pb-8 px-4 md:px-8 font-['Science_gothic'] overflow-hidden flex flex-col">
       <div className="max-w-7xl mx-auto w-full flex-grow flex flex-col pt-4">
         <header className="mb-4 text-left">
-          <h1 className="text-2xl md:text-3xl font-black text-black mb-1 tracking-tighter">
-            PLAN <span className="bg-black text-white px-2 py-0.5">INSTALLATION</span>
+          <h1 className="text-[clamp(1.25rem,5vw,2.5rem)] font-black text-black mb-1 tracking-tighter uppercase leading-none">
+            PLAN <span className="bg-black text-white px-3 py-1">INSTALLATION</span>
           </h1>
           <p className="text-black/70 text-xs mt-5 font-bold uppercase tracking-widest">
             Ready to go off-grid? Schedule today.
@@ -377,13 +379,13 @@ export default function PlanInstallation() {
               {/* Minimal Trust badges */}
               <div className="flex justify-center gap-6 py-2">
                 <div className="flex items-center gap-2 text-[14px] font-black uppercase tracking-widest text-black">
-                  <span className="w-5 h-5 bg-black text-white rounded-full flex items-center justify-center font-bold">✓</span> Verified
+                  <span className="w-5 h-5 bg-black text-white rounded-none flex items-center justify-center font-bold">✓</span> Verified
                 </div>
                 <div className="flex items-center gap-2 text-[14px] font-black uppercase tracking-widest text-black">
-                  <span className="w-5 h-5 bg-black text-white rounded-full flex items-center justify-center font-bold">✓</span> 25-YR
+                  <span className="w-5 h-5 bg-black text-white rounded-none flex items-center justify-center font-bold">✓</span> 25-YR
                 </div>
                 <div className="flex items-center gap-2 text-[14px] font-black uppercase tracking-widest text-black">
-                  <span className="w-5 h-5 bg-black text-white rounded-full flex items-center justify-center font-bold">✓</span> ISI
+                  <span className="w-5 h-5 bg-black text-white rounded-none flex items-center justify-center font-bold">✓</span> ISI
                 </div>
               </div>
             </div>

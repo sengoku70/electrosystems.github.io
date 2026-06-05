@@ -14,86 +14,90 @@ export default function Homepage() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    gsap.to(".ringbox", {
-      scrollTrigger: {
-        trigger: ".herotext",
-        start: "top 20%",
-        end: "bottom top",
-        //markers: true,
-        scrub: 2,
-      },
-      scaleX: .12,
-      scaleY: .12,
-      marginLeft: "47.7%",
-      top: "24px",
-      zIndex: 40
-    });
-    gsap.to(".herotext", {
-      scrollTrigger: {
-        trigger: ".herotext",
-        start: "bottom 50%",
-        end: "bottom 40%",
-        //markers: true,
-        scrub: true,
-        onEnter: () => {
-          document.querySelector(".herotext").textContent = "ELECTROSYTEMS";
-        }
-      },
-      fontWeight: 900,
-      backgroundImage: "linear-gradient(90deg, #6AA8FF, #7B3DE3,green)",
-      webkitTextFillColor: "transparent",
-      webkitBackgroundClip: "text",
-      backgroundClip: "text",
+    const ctx = gsap.context(() => {
 
-    });
+      gsap.to(".ringbox", {
+        scrollTrigger: {
+          trigger: ".herotext",
+          start: "top 20%",
+          end: "bottom top",
+          //markers: true,
+          scrub: 2,
+        },
+        scaleX: .12,
+        scaleY: .12,
+        marginLeft: window.innerWidth < 1024 ? "44%" : "47.7%",
+        top: "12px",
+        zIndex: 40
+      });
 
-    gsap.to(".homepage", {
-      scrollTrigger: {
-        trigger: ".ringbox",
-        start: "top top",
-        end: "bottom -10%",
-        //markers: true,
-        scrub: true,
-      },
-      backgroundColor: "rgb(254, 226, 226)"
-    });
-    gsap.to(".homepage", {
-      scrollTrigger: {
-        trigger: ".hr2",
-        start: "top top",
-        end: "bottom -10%",
-        //markers: true,
-        scrub: true,
-      },
-      backgroundColor: "rgb(254, 226, 226)"
-    });
-    gsap.to(".h2side", {
-      scrollTrigger: {
-        trigger: ".hr1",
-        start: "top bottom",
-        end: "bottom 50%",
-        //markers: true,
-        scrub: true,
-      },
-      width: "100%"
-    });
-    gsap.to(".c1, .c2, .c3", {
-      scrollTrigger: {
-        trigger: ".hr1",
-        start: "top center",
-        end: "bottom 300px",
-        //markers: true,
-        scrub: 2
+      gsap.to(".herotext", {
+        scrollTrigger: {
+          trigger: ".herotext",
+          start: "bottom 50%",
+          end: "bottom 40%",
+          //markers: true,
+          scrub: true,
+          onEnter: () => {
+            const el = document.querySelector(".herotext");
+            if (el) el.textContent = "ELECTROSYTEMS";
+          }
+        },
+        fontWeight: 900,
+        backgroundImage: "linear-gradient(90deg, #6AA8FF, #7B3DE3,green)",
+        webkitTextFillColor: "transparent",
+        webkitBackgroundClip: "text",
+        backgroundClip: "text",
+      });
 
-      },
-      marginTop: 0,
+      gsap.to(".homepage", {
+        scrollTrigger: {
+          trigger: ".ringbox",
+          start: "top top",
+          end: "bottom -10%",
+          //markers: true,
+          scrub: true,
+        },
+        backgroundColor: "rgb(254, 226, 226)"
+      });
 
-    });
+      gsap.to(".homepage", {
+        scrollTrigger: {
+          trigger: ".hr2",
+          start: "top top",
+          end: "bottom -10%",
+          //markers: true,
+          scrub: true,
+        },
+        backgroundColor: "rgb(254, 226, 226)"
+      });
 
+      gsap.to(".h2side", {
+        scrollTrigger: {
+          trigger: ".hr1",
+          start: "top bottom",
+          end: "bottom 50%",
+          //markers: true,
+          scrub: true,
+        },
+        width: "100%"
+      });
 
+      gsap.to(".c1, .c2, .c3", {
+        scrollTrigger: {
+          trigger: ".hr1",
+          start: "top center",
+          end: "bottom 300px",
+          //markers: true,
+          scrub: 2.5
+        },
+        marginTop: 0,
+        ease: "power2.out"
+      });
 
+    }); // end gsap.context
 
-
+    return () => ctx.revert(); // cleanup all ScrollTriggers on unmount
 
   }, []);
 
@@ -101,13 +105,13 @@ export default function Homepage() {
 
     <div className="homepage bg-blue-100 duration-500  w-screen">
 
-      <div className='hero h-screen w-full text-[130px] text-center'>
+      <div className='hero h-screen w-full flex flex-col items-center justify-center text-[clamp(2.5rem,10vw,8rem)] text-center relative overflow-hidden'>
 
-        <h1 className='bitcount mt-80 absolute z-20 text-center text-black herotext w-screen'>MAKING IT POSSIBLE</h1>
-        <h4 className='absolute w-[410px] z-10 bottom-0 opacity- text-[15px] text-left'>we invison to provide people with innovation that can make you go off grid , with cutting edge tecnology we are tranforming lives and Earth,Renewable energy is changing lives, giving people the freedom to choose better, greener, and more independent sources of power. From solar rooftops to wind micro-turbines, from off-grid cabins to eco-smart homes—renewable technologies are not just an alternative anymore; they are becoming the new standard.</h4>
+        <h1 className='bitcount absolute z-20 text-center text-black herotext w-screen leading-none px-4'>MAKING IT POSSIBLE</h1>
+        <h4 className='absolute w-[min(90%,410px)] z-10 bottom-8 opacity-80 text-[clamp(0.8rem,1.2vw,1rem)] text-left px-6 py-4 bg-white/5 backdrop-blur-sm shadow-xl border border-white/10'>we invison to provide people with innovation that can make you go off grid , with cutting edge tecnology we are tranforming lives and Earth,Renewable energy is changing lives, giving people the freedom to choose better, greener, and more independent sources of power. From solar rooftops to wind micro-turbines, from off-grid cabins to eco-smart homes—renewable technologies are not just an alternative anymore; they are becoming the new standard.</h4>
 
 
-        <div className={`ringbox z-1 fixed left-[35%] top-[140px]`}>
+        <div className={`ringbox z-1 fixed left-[25%] lg:left-[35%] top-[140px]`}>
           <div className={`ringg r2 border-90 border-pink-700/50 translate-y-[30px] `}></div>
           <div className={`ringg r1 border-90 border-red-700/50 translate-x-[20px] `}></div>
           <div className={`ringg r3 border-90 border-green-400/50 translate-x-[20px] `}></div>
@@ -127,41 +131,47 @@ export default function Homepage() {
 
 
 
-      <div className='cards z-10 flex row justify-center gap-[30px] items-center mt-[100px] '>
-
-
-        <div className='c1 w-1/5 h-[550px] mt-[100px] px-4 bg-white/40 backdrop-blur-2xl shadow-2xl'><img src="/image/battry.png" alt="" className='ml-[15%]' />
-          <h1 className='hero text-[20px] mx-auto'>
+      <div className='cards z-10 flex flex-col md:flex-row justify-center gap-[20px] lg:gap-[30px] items-stretch mt-[100px] px-6'>
+        <NavLink to="/Infopage" className='c1 w-full md:w-1/3 lg:w-1/4 min-h-[400px] lg:h-[550px] py-12 px-4 bg-white/40 backdrop-blur-2xl shadow-2xl flex flex-col items-center justify-center text-center hover:bg-white/50 transition-all group md:mt-[100px]'>
+          <img src="/image/battry.png" alt="" className='w-[clamp(80px,40%,160px)] max-h-[160px] object-contain mb-6 group-hover:scale-110 transition-transform duration-300' />
+          <h1 className='hero text-[clamp(1rem,3vw,1.5rem)] leading-tight text-black mb-8'>
             Learn about modern energy storage solutions
           </h1>
-          <NavLink></NavLink>
+          <span className="mt-auto px-4 py-2 border border-black text-black font-black text-[10px] tracking-widest uppercase hover:bg-black hover:text-white transition-all group-hover:bg-black group-hover:text-white scale-90 group-hover:scale-100 opacity-60 group-hover:opacity-100">
+            Learn More →
+          </span>
+        </NavLink>
 
-        </div>
+        <span className="hidden md:block h-[300px] lg:h-[400px] bg-black w-[5px] lg:w-[10px]"></span>
 
-        <span className="h-[400px] bg-black w-[10px]"></span>
-
-        <div className='c2 w-1/5 h-[550px] px-4 mt-[500px] bg-white/40 backdrop-blur-2xl shadow-2xl '> <img src="/image/plant.png" alt="" className='' />
-          <h1 className='hero text-[20px] mx-auto'>
+        <NavLink to="/Infopage" className='c2 w-full md:w-1/3 lg:w-1/4 min-h-[400px] lg:h-[550px] py-12 px-4 bg-white/40 backdrop-blur-2xl shadow-2xl flex flex-col items-center justify-center text-center hover:bg-white/50 transition-all group md:mt-[500px]'>
+          <img src="/image/plant.png" alt="" className='w-[clamp(80px,40%,160px)] max-h-[160px] object-contain mb-6 group-hover:scale-110 transition-transform duration-300' />
+          <h1 className='hero text-[clamp(1rem,3vw,1.5rem)] leading-tight text-black mb-8'>
             Learn how using renewable options help saving environment
           </h1>
+          <span className="mt-auto px-4 py-2 border border-black text-black font-black text-[10px] tracking-widest uppercase hover:bg-black hover:text-white transition-all group-hover:bg-black group-hover:text-white scale-90 group-hover:scale-100 opacity-60 group-hover:opacity-100">
+            Learn More →
+          </span>
+        </NavLink>
 
-        </div>
+        <span className="hidden md:block h-[300px] lg:h-[400px] bg-black w-[5px] lg:w-[10px]"></span>
 
-        <span className="h-[400px] bg-black w-[10px]"></span>
-
-        <div className='c3 w-1/5 h-[550px] px-4 mt-[1000px] bg-white/40 backdrop-blur-2xl shadow-2xl '><img src="/image/house.png" alt="" className='' />
-          <h1 className='hero text-[20px] mx-auto'>
+        <NavLink to="/Infopage" className='c3 w-full md:w-1/3 lg:w-1/4 min-h-[400px] lg:h-[550px] py-12 px-4 bg-white/40 backdrop-blur-2xl shadow-2xl flex flex-col items-center justify-center text-center hover:bg-white/50 transition-all group md:mt-[1000px] md:mb-0 mb-12'>
+          <img src="/image/house.png" alt="" className='w-[clamp(80px,40%,160px)] max-h-[160px] object-contain mb-6 group-hover:scale-110 transition-transform duration-300' />
+          <h1 className='hero text-[clamp(1rem,3vw,1.5rem)] leading-tight text-black mb-8'>
             Learn how you can switch to Renewable and Go of Grid
           </h1>
-        </div>
-
+          <span className="mt-auto px-4 py-2 border border-black text-black font-black text-[10px] tracking-widest uppercase hover:bg-black hover:text-white transition-all group-hover:bg-black group-hover:text-white scale-90 group-hover:scale-100 opacity-60 group-hover:opacity-100">
+            Learn More →
+          </span>
+        </NavLink>
       </div>
 
 
 
 
-      <div className='hr2 z-35 bg-black h-[450px] text-white shadow-2xl flex row justify-center overflow-hidden items-center mt-[100px] w-6/10 mx-auto hover:w-7/10 hover:h-[500px] duration-900'>
-        <h1 className='hero text-[60px] absolute text-center w-full font-bold'>CHOOSE AMONG 300+ BRANDS</h1>
+      <div className='hr2 z-35 bg-black h-[400px] lg:h-[450px] text-white shadow-2xl flex row justify-center overflow-hidden items-center mt-[100px] w-full lg:w-6/10 mx-auto hover:lg:w-7/10 hover:lg:h-[500px] duration-900'>
+        <h1 className='hero text-[clamp(1.5rem,5vw,4rem)] absolute text-center w-full font-bold px-4'>CHOOSE AMONG 300+ BRANDS</h1>
         <div className='w-[3700px] h-full flex justify-end items-center gap-4 duration-15000 translate-x-320 hover:-translate-x-280 '>
           <div className='productcard ml-[1000px]'><img src="/image/vestas.png" alt="" /></div>
 
@@ -182,11 +192,13 @@ export default function Homepage() {
         </div>
       </div>
 
-      <div className=' flex flex-row justify-between items-center mt-[150px] mb-[150px] w-7/10 mx-auto'>
-        <div className='hero text-[40px] my-[100px] w-5/10 mx-auto'>SEE WHAT COMMUNITY HAS TO OFFER <br /> <NavLink to="/Community" className="view-details-btn text-[15px]">Go to Community Page</NavLink></div>
+      <div className='flex flex-col lg:flex-row justify-between items-center mt-[100px] lg:mt-[150px] mb-[150px] w-[90%] lg:w-7/10 mx-auto gap-12'>
+        <div className='hero text-[clamp(1.5rem,4vw,2.5rem)] lg:my-[100px] w-full lg:w-5/10 text-center lg:text-left font-black leading-tight'>
+          SEE WHAT COMMUNITY HAS TO OFFER <br /> 
+          <NavLink to="/Community" className="view-details-btn text-[0.9rem] px-8 py-3 mt-6 inline-block">Go to Community Page</NavLink>
+        </div>
 
-        <div className="h-[500px] w-[500px] bg-contain border-white/60 border-40px shadow-2xl bg-no-repeat bg-[url('/image/Gemini_Generated_Image_ks59lkks59lkks59.png')] "></div>
-
+        <div className="h-[300px] md:h-[400px] lg:h-[500px] w-full lg:w-[500px] bg-contain border-white/60 border-[20px] lg:border-[40px] shadow-2xl bg-no-repeat bg-center bg-[url('/image/Gemini_Generated_Image_ks59lkks59lkks59.png')]"></div>
       </div>
 
 

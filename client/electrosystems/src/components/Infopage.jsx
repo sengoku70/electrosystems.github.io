@@ -254,7 +254,7 @@ export default function RenewableInfoPage() {
             </NavLink>
           </div>
           <img
-            src="/image/untitled33-removebg-preview.png"
+            src="/image/Untitled33-removebg-preview.png"
             alt="Off-grid house"
             className="info-offgrid-img"
           />
@@ -533,13 +533,30 @@ export default function RenewableInfoPage() {
           font-weight: 800;
         }
         .info-nature-img-wrap {
-          flex: 0 0 300px;
+          flex: 0 1 300px;
+          min-width: 0;
+          width: 100%;
+          max-width: 300px;
         }
         .info-nature-img {
           width: 100%;
+          max-height: 320px;
+          object-fit: contain;
           border-radius: 0;
           box-shadow: 0 12px 40px rgba(0,0,0,0.15);
           border: 2px solid #d1fae5;
+        }
+        @media (max-width: 640px) {
+          .info-nature-section {
+            flex-direction: column;
+          }
+          .info-nature-img-wrap {
+            max-width: 100%;
+            width: 100%;
+          }
+          .info-nature-img {
+            max-height: 240px;
+          }
         }
 
         /* ── Savings Section ── */

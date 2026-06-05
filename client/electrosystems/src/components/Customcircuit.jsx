@@ -313,8 +313,8 @@ export default function CustomSystemsPage() {
   return (
     <div className="bg-blue-100 pb-50 hero bg-fixed thicc">
       <div className="p-6 max-w-8/10 mx-auto translate-y-30">
-        <h1 className="text-3xl font-bold text-white bg-black w-fit p-2 mb-4">Custom Systems</h1>
-        <p className="mb-6 text-md text-muted-foreground">Build a hybrid solar + wind recommendation to reduce dependency on the grid. Fill inputs, pick brands, and submit to save.</p>
+        <h1 className="text-[clamp(1.5rem,5vw,2.5rem)] font-bold text-white bg-black w-fit p-2 mb-4 leading-none uppercase tracking-tighter">Custom Systems</h1>
+        <p className="mb-6 text-[clamp(0.875rem,1.2vw,1.1rem)] text-muted-foreground max-w-2xl leading-relaxed">Build a hybrid solar + wind recommendation to reduce dependency on the grid. Fill inputs, pick brands, and submit to save.</p>
 
         {/* ── Location Detection Panel ── */}
         <div className="bg-white border-l-[10px] border-black  p-0 mb-6 flex flex-wrap items-stretch gap-0 overflow-hidden">
@@ -381,9 +381,8 @@ export default function CustomSystemsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 bg-white/60 shadow-2xl gap-6">
           <div className="p-4  rounded-lg">
-            <h2 className="font-semibold mb-2">Usage & Targets</h2>
-
-            <label className="block text-sm mb-1">Preloaded Templates</label>
+            <h2 className="font-semibold mb-2 uppercase tracking-tight text-[clamp(1rem,2vw,1.25rem)]">Usage & Targets</h2>
+            <label className="block text-sm mb-1 opacity-60">Preloaded Templates</label>
             <div className="flex flex-wrap gap-2 mb-3">
               {Object.entries(templates).map(([k, v]) => (
                 <button
@@ -486,7 +485,7 @@ function PlanCard({ title, counts, costs, onSubmit, submitting }) {
         <div className="text-sm">Total estimate: <strong>₹{costs.total.toLocaleString()}</strong></div>
       </div>
 
-      <button onClick={onSubmit} disabled={submitting} className="mt-2 px-3 py-2 view-details-btn rounded border bg-black text-white w-full">
+      <button onClick={onSubmit} disabled={submitting} className="mt-2 px-3 py-2 view-details-btn rounded-none border bg-black text-white w-full">
         {submitting ? "Saving..." : "Choose this plan & Save"}
       </button>
 

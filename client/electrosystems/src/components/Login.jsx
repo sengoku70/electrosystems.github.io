@@ -7,6 +7,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 const Login = ({ token, setToken, setProfile, profile }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState(""); // login: username OR email
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -48,8 +49,7 @@ const Login = ({ token, setToken, setProfile, profile }) => {
   const login = async () => {
     setLoading(true);
     try {
-      const payload = email ? { email, password } : { username, password };
-      const res = await axios.post(`${API_URL}/auth/login`, payload);
+      const res = await axios.post(`${API_URL}/auth/login`, { identifier, password });
       localStorage.setItem("token", res.data.token);
       setToken(res.data.token);
       setMessage("Login successful!");
@@ -129,6 +129,13 @@ const Login = ({ token, setToken, setProfile, profile }) => {
 
       {/* ── RIGHT: Form Panel ── */}
       <div className="login-form-panel">
+
+        {/* Mobile-only top banner */}
+        <div className="login-mobile-header">
+          <img src="/image/Untitled.png" alt="Logo" />
+          <span>ELECTROSYSTEMS</span>
+        </div>
+
         <div className="login-form-inner">
 
           {!token ? (
@@ -159,29 +166,42 @@ const Login = ({ token, setToken, setProfile, profile }) => {
               </p>
 
               <div className="login-fields">
-                {/* username always shown */}
-                <div className="login-field-wrap">
-                  <label className="login-label">Username</label>
-                  <input
-                    placeholder="e.g. solarhero"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="login-input"
-                  />
-                </div>
-
-                {/* email shown for signup OR if user wants to login with email */}
-                <div className="login-field-wrap">
-                  <label className="login-label">
-                    Email {!sign && <span className="login-label-opt">(optional)</span>}
-                  </label>
-                  <input
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="login-input"
-                  />
-                </div>
+                {sign ? (
+                  // ── SIGN UP: separate username + email fields ──
+                  <>
+                    <div className="login-field-wrap">
+                      <label className="login-label">Username</label>
+                      <input
+                        placeholder="e.g. solarhero"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="login-input"
+                      />
+                    </div>
+                    <div className="login-field-wrap">
+                      <label className="login-label">Email</label>
+                      <input
+                        type="email"
+                        placeholder="you@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="login-input"
+                      />
+                    </div>
+                  </>
+                ) : (
+                  // ── LOG IN: single combined identifier field ──
+                  <div className="login-field-wrap">
+                    <label className="login-label">Username or Email</label>
+                    <input
+                      placeholder="solarhero  or  you@example.com"
+                      value={identifier}
+                      onChange={(e) => { setIdentifier(e.target.value); setMessage(""); }}
+                      className="login-input"
+                      autoComplete="username"
+                    />
+                  </div>
+                )}
 
                 <div className="login-field-wrap">
                   <label className="login-label">Password</label>
@@ -241,7 +261,7 @@ const Login = ({ token, setToken, setProfile, profile }) => {
         /* ── Root ── */
         .login-root {
           display: flex;
-          height: 100vh;
+          height: 100dvh;
           width: 100vw;
           overflow: hidden;
           font-family: 'Science Gothic', sans-serif;
@@ -355,9 +375,14 @@ const Login = ({ token, setToken, setProfile, profile }) => {
           flex: 0.9;
           background: #ffffff;
           display: flex;
+          flex-direction: column;
           align-items: center;
           justify-content: center;
           overflow-y: auto;
+        }
+        /* Mobile top banner — hidden on desktop */
+        .login-mobile-header {
+          display: none;
         }
         .login-form-inner {
           width: 100%;
@@ -592,6 +617,95 @@ const Login = ({ token, setToken, setProfile, profile }) => {
         .login-logout-btn:hover {
           background: #b91c1c;
           transform: translateY(-2px);
+        }
+
+        /* ═══════════════════════════════
+           MOBILE  (max-width: 767px)
+        ═══════════════════════════════ */
+        @media (max-width: 767px) {
+          .login-root {
+            flex-direction: column;
+            height: 100dvh;
+            overflow-y: auto;
+          }
+
+          /* Hide the big left visual panel */
+          .login-visual {
+            display: none;
+          }
+
+          /* Show a compact top banner instead */
+          .login-mobile-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 16px 24px;
+            background: #0f172a;
+            flex-shrink: 0;
+          }
+          .login-mobile-header img {
+            height: 26px;
+            filter: brightness(0) invert(1);
+          }
+          .login-mobile-header span {
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: white;
+          }
+
+          /* Form panel fills rest of screen */
+          .login-form-panel {
+            flex: 1;
+            justify-content: flex-start;
+          }
+
+          .login-form-inner {
+            padding: 28px 20px 40px;
+            max-width: 100%;
+          }
+
+          .login-form-title {
+            font-size: 22px;
+          }
+
+          .login-form-sub {
+            font-size: 13px;
+            margin-bottom: 20px;
+          }
+
+          .login-tabs {
+            width: 100%;
+          }
+          .login-tab {
+            flex: 1;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 14px;
+          }
+
+          /* font-size 16px prevents iOS auto-zoom on input focus */
+          .login-input {
+            height: 44px;
+            font-size: 16px;
+          }
+
+          .login-btn {
+            height: 50px;
+            font-size: 15px;
+          }
+
+          .login-fields {
+            gap: 14px;
+            margin-bottom: 20px;
+          }
+
+          .login-profile-stats {
+            flex-wrap: wrap;
+            justify-content: center;
+          }
         }
       `}</style>
     </div>
