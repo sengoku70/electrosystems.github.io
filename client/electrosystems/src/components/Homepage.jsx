@@ -14,22 +14,30 @@ export default function Homepage() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const ctx = gsap.context(() => {
+    const mm = gsap.matchMedia();
 
-      gsap.to(".ringbox", {
-        scrollTrigger: {
-          trigger: ".herotext",
-          start: "top 20%",
-          end: "bottom top",
-          //markers: true,
-          scrub: 2,
-        },
-        scaleX: .12,
-        scaleY: .12,
-        marginLeft: window.innerWidth < 1024 ? "44%" : "47.7%",
-        top: "12px",
-        zIndex: 40
-      });
+    mm.add({
+      isDesktop: "(min-width: 1024px)",
+      isMobile: "(max-width: 1023px)"
+    }, (context) => {
+      const { isDesktop } = context.conditions;
+
+      if (isDesktop) {
+        gsap.to(".ringbox", {
+          scrollTrigger: {
+            trigger: ".herotext",
+            start: "top 20%",
+            end: "bottom top",
+            //markers: true,
+            scrub: 2,
+          },
+          scaleX: .12,
+          scaleY: .12,
+          marginLeft: "47.7%",
+          top: "12px",
+          zIndex: 40
+        });
+      }
 
       gsap.to(".herotext", {
         scrollTrigger: {
@@ -95,30 +103,30 @@ export default function Homepage() {
         ease: "power2.out"
       });
 
-    }); // end gsap.context
+    }); // end gsap.matchMedia
 
-    return () => ctx.revert(); // cleanup all ScrollTriggers on unmount
+    return () => mm.revert(); // cleanup all ScrollTriggers on unmount
 
   }, []);
 
   return (
 
-    <div className="homepage bg-blue-100 duration-500  w-screen">
+    <div className="homepage relative z-0 bg-blue-100 duration-500  w-screen">
 
-      <div className='hero h-screen w-full flex flex-col items-center justify-center text-[clamp(2.5rem,10vw,8rem)] text-center relative overflow-hidden'>
+      <div className='hero h-screen w-full flex flex-col items-center justify-center text-[clamp(1.2rem,8vw,8rem)] text-center relative overflow-hidden'>
 
         <h1 className='bitcount absolute z-20 text-center text-black herotext w-screen leading-none px-4'>MAKING IT POSSIBLE</h1>
         <h4 className='absolute w-[min(90%,410px)] z-10 bottom-8 opacity-80 text-[clamp(0.8rem,1.2vw,1rem)] text-left px-6 py-4 bg-white/5 backdrop-blur-sm shadow-xl border border-white/10'>we invison to provide people with innovation that can make you go off grid , with cutting edge tecnology we are tranforming lives and Earth,Renewable energy is changing lives, giving people the freedom to choose better, greener, and more independent sources of power. From solar rooftops to wind micro-turbines, from off-grid cabins to eco-smart homes—renewable technologies are not just an alternative anymore; they are becoming the new standard.</h4>
 
 
-        <div className={`ringbox z-1 fixed left-[25%] lg:left-[35%] top-[140px]`}>
+        <div className={`ringbox z-[-1] fixed left-[25%] lg:left-[35%] top-[140px]`}>
           <div className={`ringg r2 border-90 border-pink-700/50 translate-y-[30px] `}></div>
           <div className={`ringg r1 border-90 border-red-700/50 translate-x-[20px] `}></div>
           <div className={`ringg r3 border-90 border-green-400/50 translate-x-[20px] `}></div>
           <div className={`ringg r4 border-90 border-blue-500/50 translate-y-[20px] `}></div>
           <div className={`ringg r5 border-30 border-white/60 translate-x-[20px]} `}></div>
         </div>
-        <div className='text-[40px] w-screen text-center opacity-1 h-fit '><span className='h2side bg-black w-[10px] mr-10'> </span> ELECTROSYTEMS</div>
+        <div className='text-[clamp(1.1rem,4vw,2rem)] w-full text-center opacity-1 h-fit '><span className='h2side inline-block bg-black w-[8px] mr-3 lg:mr-10'> </span> ELECTROSYTEMS</div>
 
       </div>
 
