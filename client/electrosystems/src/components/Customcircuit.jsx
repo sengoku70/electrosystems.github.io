@@ -14,7 +14,7 @@ import Mysystem from "./Mysystem.jsx";
 
 export default function CustomSystemsPage() {
   // Sample product catalogs (you can extend or fetch from backend)
-  const API_URL = "https://electrosystems-github-io-glk2.vercel.app";
+  const API_URL = "https://electrosystems-gi-git-02db7d-baibhavkumar150-gmailcoms-projects.vercel.app";
   const location = useLocation();
 
   const solarCatalog = [

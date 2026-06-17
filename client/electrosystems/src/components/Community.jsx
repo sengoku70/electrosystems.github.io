@@ -16,7 +16,7 @@ export default function Community() {
   const fetchAllSystems = async () => {
     try {
       setLoading(true);
-      const response = await fetch("https://electrosystems-github-io-glk2.vercel.app/payload/all");
+      const response = await fetch("https://electrosystems-gi-git-02db7d-baibhavkumar150-gmailcoms-projects.vercel.app/payload/all");
       const data = await response.json();
       
       if (data.systems) {
