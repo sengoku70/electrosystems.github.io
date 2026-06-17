@@ -11,14 +11,9 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || origin.startsWith("http://localhost:") || origin.endsWith(".vercel.app") || origin.endsWith("github.io")) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
+  origin: true,
+  credentials: true,
+  optionsSuccessStatus: 200
 }));
 
 app.use(express.json());
