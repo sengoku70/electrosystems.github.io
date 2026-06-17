@@ -11,7 +11,13 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin: "http://localhost:5173", // React frontend
+  origin: function (origin, callback) {
+    if (!origin || origin.startsWith("http://localhost:") || origin.endsWith(".vercel.app") || origin.endsWith("github.io")) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
