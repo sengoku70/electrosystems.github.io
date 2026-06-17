@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "../App.css";
-const API_URL = "http://localhost:5000";
+const API_URL = "https://electrosystems-github-io-glk2.vercel.app";
 import { NavLink, useNavigate } from "react-router-dom";
 
 const Login = ({ token, setToken, setProfile, profile }) => {

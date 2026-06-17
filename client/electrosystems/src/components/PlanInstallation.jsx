@@ -18,7 +18,7 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const API_URL = "http://localhost:5000";
+const API_URL = "https://electrosystems-github-io-glk2.vercel.app";
 
 // Helper component for map interactions
 function LocationMarker({ position, setPosition, onAddressFetch }) {

@@ -11,7 +11,7 @@ import Sidebar from './components/Sidebar';
 import { HiMenu } from 'react-icons/hi';
 import './App.css'
 
-const API_URL = "http://localhost:5000";
+const API_URL = "https://electrosystems-github-io-glk2.vercel.app";
 
 // Must live inside <Router> so useLocation works
 function AppLayout({ token, setToken, profile, setProfile, isSidebarOpen, toggleSidebar }) {
