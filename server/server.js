@@ -23,6 +23,10 @@ app.use("/auth", authRoutes);
 app.use("/payload", payloadRoutes);
 app.use("/installation", require("./routes/installationRoutes"));
 
+app.get("/", (req, res) => {
+  res.send("Backend server is running!");
+});
+
 // router.post("/custom-systems", auth, async (req, res) => {
 //   try {
 //     console.log("reached server");
